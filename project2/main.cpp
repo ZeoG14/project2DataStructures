@@ -68,7 +68,6 @@ public:
     void setLocation(DataType xval, DataType yval); //redefine the points
     DataType getXvalue(); //getter for the x value since it is protected
     DataType  getYvalue(); //getter for the y value sine it is protected
-    DataType& data();
     void display(); //method to display the current point
 };
 
@@ -126,13 +125,13 @@ protected:
 public:
     LineSegment(); //default constructor for LineSegment
     LineSegment( Point<DataType> one,  Point<DataType> two); // contructor to build a linesegment from the two points
-    DataType& length(); //method to calculate the length of the linesegment
+    DataType length(); //method to calculate the length of the linesegment
     Point<DataType> midpoint();//method to calculate the midpoint of the linesegment
     Point<DataType> xIntercept ();//method to calculate the x-intercept returns it as a point
     Point<DataType> yIntercept ();//method to calculate the y-intercept returns it as a point
-    DataType& slope();//method to calculate the slope and returns it as a double
+    DataType slope();//method to calculate the slope and returns it as a double
     bool itIntersects (LineSegment L);//method that will check if the points intersect
-    DataType& min(DataType num1, DataType num2);//method to calculate the min of two numbers and returns it as a double
+    DataType min(DataType num1, DataType num2);//method to calculate the min of two numbers and returns it as a double
     Point<DataType> intersectionPoint (LineSegment L);//method that computes the intersection point and returns it as a point
     bool isParallel (LineSegment L); //method to determine wether two linesegments are parallel returns it as a boolean
     Point<DataType>  getP1(); //getter for P1 returns it as a point
@@ -156,11 +155,11 @@ LineSegment<DataType>::LineSegment(Point<DataType> one, Point<DataType> two)//no
 }
 
 template <class DataType>
-DataType& LineSegment<DataType>:: length() // method to calculate length of the linesegment
+DataType LineSegment<DataType>:: length() // method to calculate length of the linesegment
 {
     //using the length formula from refrence
-    DataType differenceOfX = (*P1).getXvalue() - (*P2).getXvalue(); //calculating x1 - x2
-    DataType differenceOfY = (*P1).getYvalue() - (*P2).getYvalue(); // calculating y1 - y2
+    DataType differenceOfX = P1.getXvalue() - P2.getXvalue(); //calculating x1 - x2
+    DataType differenceOfY = P1.getYvalue() - P2.getYvalue(); // calculating y1 - y2
     DataType xSquared = differenceOfX * differenceOfX; // difference of X is squared
     DataType ySquared = differenceOfY * differenceOfY;// difference of Y is squared
     DataType length = squareroot(xSquared + ySquared);// taking the squareroot of X + Y which results in the length of linesegment
@@ -181,26 +180,26 @@ template <class DataType>
 Point<DataType>  LineSegment<DataType>::xIntercept()//method to find the xIntercept
 {
     //formula from refrence ((x1-y1) * (x2-x1)) / (y2-y1))
-    DataType xIntercept = ((*P1).getXvalue() - ((*P1).getYvalue()) * (((*P2).getXvalue() - (*P1).getXvalue()))/ ((*P2).getYvalue() - (*P1).getYvalue())); //((x1-y1) * (x2-x1)) / (y2-y1))
-    Point<DataType> intercept = new Point<DataType> (xIntercept, 0); //creating a new point where y is always equal to zero at the xIntercept
-    return (*intercept); //returning the point containing the xIntercept
+    DataType xIntercept = ((P1.getXvalue() - P1.getYvalue()) * ((P2.getXvalue() - P1.getXvalue())))/ (P2.getYvalue() - P1.getYvalue()); //((x1-y1) * (x2-x1)) / (y2-y1))
+    Point<DataType> intercept(xIntercept, 0); //creating a new point where y is always equal to zero at the xIntercept
+    return (intercept); //returning the point containing the xIntercept
 }
 
 template <class DataType>
 Point<DataType> LineSegment<DataType>::yIntercept()//method to find to yIntercept
 {
     //using formula from refrence to obtain the yIntercept = y1 - slope * x1
-    DataType yIntercept = (*P1).getYvalue() - (slope()) * (*P1).getXvalue(); // multiplying slope by x1 and then subtracting from y1
-    Point<DataType> intercept = new Point<DataType>(0, yIntercept); //creating new point for yIntercept where x is always zero;
-    return (*intercept); //dereferencing yIntercept and returning it
+    DataType yIntercept = P1.getYvalue() - (slope()) * P1.getXvalue(); // multiplying slope by x1 and then subtracting from y1
+    Point<DataType> intercept (0, yIntercept); //creating new point for yIntercept where x is always zero;
+    return (intercept); //dereferencing yIntercept and returning it
 }
 
 template<class DataType>
-DataType& LineSegment<DataType>::slope()//method to find the slope
+DataType LineSegment<DataType>::slope()//method to find the slope
 {
     //using formula from refrence to find slope y2 - y1 / x2 - x1
-    DataType differenceInY = (*P2).getYvalue() - (*P1).getYvalue();// difference in y2 - y1
-    DataType differenceInX = (*P2).getXvalue() - (*P1).getXvalue();// difference in x2 - x1
+    DataType differenceInY = P2.getYvalue() - P1.getYvalue();// difference in y2 - y1
+    DataType differenceInX = P2.getXvalue() - P1.getXvalue();// difference in x2 - x1
     DataType slope = differenceInY / differenceInX; // obtain the slope y2 - y1 / x2 - x1
     return slope; //returns double containing slope
 }
@@ -211,30 +210,30 @@ bool LineSegment<DataType>::itIntersects(LineSegment L)//method to determine wet
 {
     //used formula found in reference
     //creating vectors m and n by obtaing the length of the vector from the P1P2  and P1Q1
-    DataType d1u1 = (*P2).getXvalue() - (*P1).getXvalue();//P2 xvalue - P1 xvalue which will be u1 for vector m
-    DataType d1v1 = (*P2).getYvalue() - (*P1).getYvalue();//P2 yvalue - P1 yvalue which will be v1 for vector m
-    DataType d1u2 = L.P1->getXvalue() - (*P1).getXvalue();//P3 xvalue - P1 xvalue which will be u2 for vector n
-    DataType d1v2 = L.P1->getYvalue() - (*P1).getYvalue();//P3 yvalue - P1 yvalue which will be u2 for vecotr n
+    DataType d1u1 = P2.getXvalue() - P1.getXvalue();//P2 xvalue - P1 xvalue which will be u1 for vector m
+    DataType d1v1 = P2.getYvalue() - P1.getYvalue();//P2 yvalue - P1 yvalue which will be v1 for vector m
+    DataType d1u2 = L.P1.getXvalue() - P1.getXvalue();//P3 xvalue - P1 xvalue which will be u2 for vector n
+    DataType d1v2 = L.P1.getYvalue() - P1.getYvalue();//P3 yvalue - P1 yvalue which will be u2 for vecotr n
     DataType d1 = ((d1u1) * (d1v2) - ((d1u2 * (d1v1)))); //calculating the determinant and assinging the value to d1
     
-    DataType d2u1 = (*P2).getXvalue() - (*P1).getXvalue();//P2 xvalue - P1 xvalue which will be u1 for vector m
-    DataType d2v1 = (*P2).getYvalue() - (*P1).getYvalue();//P2 yvalue - P1 yvalue which will be v1 for vector m
-    DataType d2u2 = L.P2->getXvalue() - (*P1).getXvalue();//P4 xvalue - P1 xvalue which will be u2 for vector n
-    DataType d2v2 = L.P2->getYvalue() - (*P1).getYvalue();//P4 yvalue - P1 xvalue which will be v2 for vector n
+    DataType d2u1 = P2.getXvalue() - P1.getXvalue();//P2 xvalue - P1 xvalue which will be u1 for vector m
+    DataType d2v1 = P2.getYvalue() - P1.getYvalue();//P2 yvalue - P1 yvalue which will be v1 for vector m
+    DataType d2u2 = L.P2.getXvalue() - P1.getXvalue();//P4 xvalue - P1 xvalue which will be u2 for vector n
+    DataType d2v2 = L.P2.getYvalue() - P1.getYvalue();//P4 yvalue - P1 xvalue which will be v2 for vector n
     DataType d2 = ((d2u1) * (d2v2) - ((d2u2 * (d2v1)))); //calculating the determinant and assinging the value to d2
   
     DataType d1d2 = d1 * d2; //multiplying d1 and d2 in order to test for d1d2 <= 0;
     
-    DataType d3v1 = L.P2->getYvalue() - L.P1->getYvalue();//P4 yvalue - P3 yvalue which will be v1 for vector m
-    DataType d3u1 = L.P2->getXvalue() - L.P1->getXvalue();//P4 vvalue - P3 vvalue which will be u1 for vector m
-    DataType d3v2 = (*P1).getYvalue() - L.P1->getYvalue();//P1 yvalue - P3 yvalue which will be v2 for vector n
-    DataType d3u2 = (*P1).getXvalue() - L.P1->getXvalue();//P1 xvalue - P3 xvalue which will be u2 for vector n
+    DataType d3v1 = L.P2.getYvalue() - L.P1.getYvalue();//P4 yvalue - P3 yvalue which will be v1 for vector m
+    DataType d3u1 = L.P2.getXvalue() - L.P1.getXvalue();//P4 vvalue - P3 vvalue which will be u1 for vector m
+    DataType d3v2 = P1.getYvalue() - L.P1.getYvalue();//P1 yvalue - P3 yvalue which will be v2 for vector n
+    DataType d3u2 = P1.getXvalue() - L.P1.getXvalue();//P1 xvalue - P3 xvalue which will be u2 for vector n
     DataType d3 = ((d3u1) * (d3v2) - ((d3u2 * (d3v1)))); //calculating the determinant and assinging the value to d3
     
-    DataType d4v1 = L.P2->getYvalue() - L.P1->getYvalue();//P4 yvalue - P1 yvalue which will be v1 for vector m
-    DataType d4u1 = L.P2->getXvalue() - L.P1->getXvalue();//P4 xvalue - P1 xvalue which will be u1 for vector m
-    DataType d4v2 = (*P2).getYvalue() - (*P1).getYvalue();//P2 yvalue - P1 yvalue which will be v2 for vector n
-    DataType d4u2 = (*P2).getXvalue() - (*P1).getXvalue();//P2 xvalue - P1 xvalue which will be u2 for vector n
+    DataType d4v1 = L.P2.getYvalue() - L.P1.getYvalue();//P4 yvalue - P1 yvalue which will be v1 for vector m
+    DataType d4u1 = L.P2.getXvalue() - L.P1.getXvalue();//P4 xvalue - P1 xvalue which will be u1 for vector m
+    DataType d4v2 = P2.getYvalue() - P1.getYvalue();//P2 yvalue - P1 yvalue which will be v2 for vector n
+    DataType d4u2 = P2.getXvalue() - P1.getXvalue();//P2 xvalue - P1 xvalue which will be u2 for vector n
     DataType d4 = ((d4u1) * (d4v2) - ((d4u2 * (d4v1)))); //calculating the determinant and assinging the value to d3
     
     DataType d3d4 = d3 * d4;//multiplying d2 and d4 in order to test for d1d2 <= 0;
@@ -244,7 +243,7 @@ bool LineSegment<DataType>::itIntersects(LineSegment L)//method to determine wet
     {
            return true; //retruning true
     }
-    else if((*this).intersectionPoint(L).getXvalue() < min((*P1).getXvalue(), L.P1->getXvalue())) //checking if the xValue is on the linesegment, if not than false they don't intercept
+    else if(this->intersectionPoint(L).getXvalue() < min(P1.getXvalue(), L.P1.getXvalue())) //checking if the xValue is on the linesegment, if not than false they don't intercept
     {
            return false; //returning false
     }
@@ -257,7 +256,7 @@ bool LineSegment<DataType>::itIntersects(LineSegment L)//method to determine wet
 }
 
 template<class DataType>
-DataType& LineSegment<DataType>::min(DataType num1, DataType num2)//method to find the largest number between two numbers
+DataType LineSegment<DataType>::min(DataType num1, DataType num2)//method to find the largest number between two numbers
 {
     if(num1 > num2) //if num1 is greater than num2
     {
@@ -273,10 +272,10 @@ template <class DataType>
 Point<DataType> LineSegment<DataType>::intersectionPoint (LineSegment L)//method to determine and return the intersection point
 {
     //formula found in refrence x = (c2 - c1)/ / (m2-m1) and y = (c1m2 - c2m1) / (m2-m1)           where c = yIntercept and m = slope
-    DataType xValue = ((L.yIntercept().getYvalue() - (*this).yIntercept().getYvalue()) / ((*this).slope() - L.slope()));// obtining x value by computing (c2 - c1)/ / (m2-m1)
-    DataType yValue = ((((*this).yIntercept().getYvalue() * L.slope()) - (L.yIntercept().getYvalue() * (*this).slope())) / ((L.slope()) - (*this).slope())); // obtaining y value (c1m2 - c2m1) / (m2-m1)
-    Point<DataType> intersection = new Point<DataType>(xValue, yValue); //creating new point from xValue and yValue
-    return (*intersection);//returning the intersection point
+    DataType xValue = ((L.yIntercept().getYvalue() - this->yIntercept().getYvalue()) / (this->slope() - L.slope()));// obtining x value by computing (c2 - c1)/ / (m2-m1)
+    DataType yValue = (((this->yIntercept().getYvalue() * L.slope()) - (L.yIntercept().getYvalue() * this->slope())) / ((L.slope()) - this->slope())); // obtaining y value (c1m2 - c2m1) / (m2-m1)
+    Point<DataType> intersection(xValue, yValue); //creating new point from xValue and yValue
+    return (intersection);//returning the intersection point
 }
 
 
@@ -321,14 +320,33 @@ void LineSegment<DataType>::displayEquation() //method to display the slope inte
 int main()
 {
 
-    Point<double> p(6.9, 4.20);
-    Point<double> q(3.5, 4.3);
-    
+    Point<double> p(0.0, 0.0);
+    Point<double> q(5.23, 5.23);
 
+    Point<double> r(0.0, 5.23);
+    Point<double> s(5.23, 0.0);
     
-    LineSegment<double> test(p, q);
+    Point<double> t(0.0, 5.23);
+    Point<double> u(5.23, 0.0);
     
-    test.midpoint().display();
+    LineSegment<double> l (p, q);
+    LineSegment<double> m(r,s);
+    LineSegment<double> n(t,u);
+    
+    l.xIntercept().display();
+    l.yIntercept().display();
+    cout << endl;
+    double length = l.length();
+    cout << length << endl;
+    l.midpoint().display();
+    bool d = l.isParallel(m);
+    cout << d << endl;
+    
+    
+    l.intersectionPoint(m).display();
+    
+   
+
     
     
     
